@@ -23,12 +23,21 @@
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:[[BLCWebBrowserViewController alloc] init]];
     
     [self.window makeKeyAndVisible];
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Welcome!", @"Welcome title")
+            message:NSLocalizedString(@"Get excited to use the best web browser ever!", @"Welcome comment")
+            delegate:nil
+            cancelButtonTitle:NSLocalizedString(@"OK, I'm excited!", @"Welcome button title") otherButtonTitles:nil];
+    [alert show];
     return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+    UINavigationController *navigationVC = (UINavigationController *)self.window.rootViewController;
+    BLCWebBrowserViewController *browserVC = [[navigationVC viewControllers] firstObject];
+    [browserVC resetWebView];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
