@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		943CE8131AF94E7300B39CF0 /* BLCAwesomeFloatingToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 943CE8121AF94E7300B39CF0 /* BLCAwesomeFloatingToolbar.m */; };
 		9452CEBB1AEE1BF40000C1B4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9452CEBA1AEE1BF40000C1B4 /* main.m */; };
 		9452CEBE1AEE1BF40000C1B4 /* BLCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9452CEBD1AEE1BF40000C1B4 /* BLCAppDelegate.m */; };
 		9452CEC61AEE1BF40000C1B4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9452CEC51AEE1BF40000C1B4 /* Images.xcassets */; };
@@ -27,6 +28,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		943CE8111AF94E7300B39CF0 /* BLCAwesomeFloatingToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLCAwesomeFloatingToolbar.h; sourceTree = "<group>"; };
+		943CE8121AF94E7300B39CF0 /* BLCAwesomeFloatingToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLCAwesomeFloatingToolbar.m; sourceTree = "<group>"; };
 		9452CEB51AEE1BF40000C1B4 /* BlocBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlocBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9452CEBA1AEE1BF40000C1B4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		9452CEBC1AEE1BF40000C1B4 /* BLCAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLCAppDelegate.h; sourceTree = "<group>"; };
@@ -87,6 +90,8 @@
 				9452CEB81AEE1BF40000C1B4 /* Supporting Files */,
 				9452CEE11AEE1CDF0000C1B4 /* BLCWebBrowserViewController.h */,
 				9452CEE21AEE1CDF0000C1B4 /* BLCWebBrowserViewController.m */,
+				943CE8111AF94E7300B39CF0 /* BLCAwesomeFloatingToolbar.h */,
+				943CE8121AF94E7300B39CF0 /* BLCAwesomeFloatingToolbar.m */,
 			);
 			path = BlocBrowser;
 			sourceTree = "<group>";
@@ -220,6 +225,7 @@
 				9452CEBE1AEE1BF40000C1B4 /* BLCAppDelegate.m in Sources */,
 				9452CEBB1AEE1BF40000C1B4 /* main.m in Sources */,
 				9452CEE31AEE1CDF0000C1B4 /* BLCWebBrowserViewController.m in Sources */,
+				943CE8131AF94E7300B39CF0 /* BLCAwesomeFloatingToolbar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
