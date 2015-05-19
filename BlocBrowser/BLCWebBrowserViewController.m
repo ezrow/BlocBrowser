@@ -62,8 +62,13 @@
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicator];
-    [self.activityIndicator startAnimating];
+    
     // Do any additional setup after loading the view.
+}
+
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.awesomeToolbar.frame = CGRectMake(20, 100, 280, 60);
 }
 
 - (void) viewWillLayoutSubviews {
@@ -79,7 +84,6 @@
     self.textField.frame = CGRectMake(0, 0, width, itemHeight);
     self.webview.frame = CGRectMake(0, CGRectGetMaxY(self.textField.frame), width, browserHeight);
     
-    self.awesomeToolbar.frame = CGRectMake(20, 100, 280, 60);
 }
 
 #pragma mark - BLCAwesomeFloatingToolbarDelegate
@@ -194,6 +198,31 @@
     
     self.textField.text = nil;
     [self updateButtonsAndTitle];
+}
+
+
+- (void) floatingToolbar:(BLCAwesomeFloatingToolbar *)toolbar didTryToPanWithOffset:(CGPoint)offset {
+    CGPoint startingPoint = toolbar.frame.origin;
+    CGPoint newPoint = CGPointMake(startingPoint.x + offset.x, startingPoint.y + offset.y);
+    
+    CGRect potentialNewFrame = CGRectMake(newPoint.x, newPoint.y, CGRectGetWidth(toolbar.frame), CGRectGetHeight(toolbar.frame));
+    
+    if (CGRectContainsRect(self.view.bounds, potentialNewFrame)) {
+        toolbar.frame = potentialNewFrame;
+    }
+}
+
+- (void) floatingToolbar:(BLCAwesomeFloatingToolbar *)toolbar didTryToPinchWithScale:(CGFloat)scale {    
+    CGPoint startingPoint = toolbar.frame.origin;
+    CGFloat newWidth = toolbar.frame.size.width *  scale;
+    CGFloat newHeight = toolbar.frame.size.height *  scale;
+
+    
+    CGRect potentialNewFrame = CGRectMake(startingPoint.x, startingPoint.y, newWidth,newHeight);
+    
+    if (CGRectContainsRect(self.view.bounds, potentialNewFrame)) {
+        toolbar.frame = potentialNewFrame;
+    }
 }
 
 @end

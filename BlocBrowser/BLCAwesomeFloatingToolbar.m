@@ -14,7 +14,10 @@
 @property (nonatomic, strong) NSArray *colors;
 @property (nonatomic, strong) NSArray *labels;
 @property (nonatomic, weak) UILabel *currentLabel;
-
+@property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
+@property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
+@property (nonatomic, strong) UIPinchGestureRecognizer *pinchGesture;
+@property (nonatomic, strong) UILongPressGestureRecognizer *longPressGesture;
 @end
 
 @implementation BLCAwesomeFloatingToolbar
@@ -68,7 +71,30 @@
         }
     }
     
+    self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapFired:)];
+    [self addGestureRecognizer:self.tapGesture];
+    self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panFired:)];
+    [self addGestureRecognizer:self.panGesture];
+    self.pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchFired:)];
+    [self addGestureRecognizer:self.pinchGesture];
+
+    self.longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressFired:)];
+    [self addGestureRecognizer:self.longPressGesture];
+
     return self;
+}
+
+- (void) tapFired:(UITapGestureRecognizer *)recognizer {
+    if (recognizer.state == UIGestureRecognizerStateRecognized) {
+        CGPoint location = [recognizer locationInView:self];
+        UIView *tappedView = [self hitTest:location withEvent:nil];
+        
+        if ([self.labels containsObject:tappedView]) {
+            if ([self.delegate respondsToSelector:@selector(floatingToolbar:didSelectButtonWithTitle:)]) {
+                [self.delegate floatingToolbar:self didSelectButtonWithTitle:((UILabel *)tappedView).text];
+            }
+        }
+    }
 }
 
 - (void) layoutSubviews {
@@ -112,45 +138,6 @@
     return (UILabel *)subview;
 }
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    UILabel *label = [self labelFromTouches:touches withEvent:event];
-    
-    self.currentLabel = label;
-    self.currentLabel.alpha = 0.5;
-}
-
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    UILabel *label = [self labelFromTouches:touches withEvent:event];
-    
-    if (self.currentLabel != label) {
-        // The label being touched is no longer the initial label
-        self.currentLabel.alpha = 1;
-    } else {
-        // The label being touched is the initial label
-        self.currentLabel.alpha = 0.5;
-    }
-}
-
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    UILabel *label = [self labelFromTouches:touches withEvent:event];
-    
-    if (self.currentLabel == label) {
-        NSLog(@"Label tapped: %@", self.currentLabel.text);
-        
-        if ([self.delegate respondsToSelector:@selector(floatingToolbar:didSelectButtonWithTitle:)]) {
-            [self.delegate floatingToolbar:self didSelectButtonWithTitle:self.currentLabel.text];
-        }
-    }
-    
-    self.currentLabel.alpha = 1;
-    self.currentLabel = nil;
-}
-
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-    self.currentLabel.alpha = 1;
-    self.currentLabel = nil;
-}
-
 
 
 #pragma mark - Button Enabling
@@ -165,6 +152,57 @@
     }
 }
 
+- (void) panFired:(UIPanGestureRecognizer *)recognizer {
+    if (recognizer.state == UIGestureRecognizerStateChanged) {
+        CGPoint translation = [recognizer translationInView:self];
+        
+        NSLog(@"New translation: %@", NSStringFromCGPoint(translation));
+        
+        if ([self.delegate respondsToSelector:@selector(floatingToolbar:didTryToPanWithOffset:)]) {
+            [self.delegate floatingToolbar:self didTryToPanWithOffset:translation];
+        }
+        
+        [recognizer setTranslation:CGPointZero inView:self];
+    }
+}
 
+- (void) pinchFired:(UIPinchGestureRecognizer *)recognizer {
+    if (recognizer.state  == UIGestureRecognizerStateBegan ||
+        recognizer.state == UIGestureRecognizerStateChanged ||
+        recognizer.state  == UIGestureRecognizerStateEnded) {
+
+        if ([self.delegate respondsToSelector:@selector(floatingToolbar:didTryToPinchWithScale:)]) {
+            [self.delegate floatingToolbar:self didTryToPinchWithScale:recognizer.scale];
+        }
+
+    }
+}
+
+- (void) longPressFired:(UILongPressGestureRecognizer *)recognizer {
+    if (recognizer.ßstate == UIGestureRecognizerStateEnded) {
+        
+        
+        // four labels in self.labels
+        // four colors in self.colors
+        //
+        // we want to rotate the colors for the labels
+        //
+        // i.e. color[0] changes to color[1], color[1] changes to color[2], etc.
+        
+        NSMutableArray *array = [NSMutableArray arrayWithCapacity:[self.colors count]];
+        for (int i=0; i < self.colors.count; i++) {
+            if ((i+1) < self.colors.count) {
+                array[i] = self.colors[i+1];
+            } else {
+                array[i] = self.colors[0];
+            }
+        }
+        self.colors = array;
+        for (int i=0; i < self.labels.count; i++) {
+            ((UILabel *)self.labels[i]).backgroundColor = self.colors[i];
+        }
+    
+    }
+}
 
 @end
